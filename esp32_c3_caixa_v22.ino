@@ -6,7 +6,7 @@
 #include <WiFiClientSecure.h>
 #include <Preferences.h>
 #include <esp_task_wdt.h>
-#include <time.h>
+#include <time.h>F
 
 #define FIREBASE_DISABLE_SD_CARD
 #define FIREBASE_DISABLE_FLASH
@@ -28,7 +28,7 @@ const char* TELEGRAM_TOKEN = "COLOQUE_NOVO_TOKEN_TELEGRAM";
 const char* TELEGRAM_CHAT  = "COLOQUE_SEU_CHAT_ID";
 const char* VOICEMONKEY_TOKEN = "COLOQUE_NOVO_TOKEN_VOICEMONKEY";
 
-const char* SONOFF_IP = "192.168.1.150";
+const char* SONOFF_IP = "192.168.1.71";
 const char* SONOFF_USER = "";
 const char* SONOFF_PASS = "";
 
