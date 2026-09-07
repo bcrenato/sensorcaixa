@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monitor Caixa D’Água</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#0b0f1a">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Monitoramento Água">
+
+<link rel="apple-touch-icon" href="/caixa_dagua/icone.png">
+
+<style>
+  .btn-filtro { background: #1e293b; color: #94a3b8; border: 1px solid #3b82f6; padding: 5px 10px; border-radius: 8px; font-size: 10px; cursor: pointer; transition: 0.3s; }
+  .btn-filtro.active { background: #3b82f6; color: white; }
+  
+  /* Estilo do botão de atalho restaurado */
+  .btn-navegacao { width: 100%; padding: 12px; background: #334155; color: white; border-radius: 12px; border: 1px solid #475569; font-weight: bold; margin-top: 15px; cursor: pointer; font-size: 13px; transition: 0.3s; }
+  .btn-navegacao:hover { background: #475569; }
+</style>
+</head>
+<body>
+
+<div class="dashboard">
+  <div class="titulo-box" style="position: relative;">
+    <h2 class="titulo-principal">CAIXA D’ÁGUA</h2>
+    <p class="subtitulo">Marechal Castelo Branco</p>
+    <div onclick="window.location.href='config.html'" style="position: absolute; right: 0; top: 0; cursor: pointer; font-size: 24px;">⚙️</div>
+  </div>
+
+  <div class="card-tank">
+      <div class="tank">
+        <div class="water" id="water">
+            <div class="wave wave1"></div>
+            <div class="wave wave2"></div>
+        </div>
+        <div id="alertaGrande" class="alerta-grande"></div>
+        <img src="caixa.png" class="tank-img">
+        <div class="glass"></div>
+      </div>
+      <h1 id="percent">0%</h1>
+      <h2 id="litrosText" style="font-size: 22px; margin: 0; font-weight: bold; opacity: 0.9;">0 L</h2>
+      <p id="status">Normal</p>
+  </div>
+
+  <button onclick="window.location.href='consumo.html'" class="btn-navegacao">
+    📊 DETALHES E HISTÓRICO DE GASTOS
+  </button>
+
+  <!-- ===== NOVO: GASTO HOJE ===== -->
+<div class="card-chart">
+  <h3>💧 GASTO HOJE</h3>
+  <h1 id="gastoHoje">0 L</h1>
+</div>
+
+  <!-- ===== NOVO: GRÁFICO ===== -->
+<div class="card-chart">
+  <h3>📊 Consumo dos últimos dias</h3>
+  <canvas id="graficoConsumo"></canvas>
+</div>
+  
+
+  
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="script.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
+</script>
+</body>
+</html>

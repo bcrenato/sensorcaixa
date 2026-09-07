@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Configuração - Caixa D'Água</title>
+<style>
+body{margin:0;padding:20px;background:#0b0f1a;color:#fff;font-family:Arial,sans-serif}.container{max-width:500px;margin:auto}.card{background:#1e293b;padding:20px;border-radius:18px;margin-bottom:15px}h1{text-align:center}label{display:block;margin-top:18px;margin-bottom:6px;color:#94a3b8}input{width:100%;box-sizing:border-box;padding:14px;border-radius:10px;border:1px solid #475569;background:#0f172a;color:#fff;font-size:18px}button{width:100%;padding:15px;margin-top:12px;border:0;border-radius:12px;color:#fff;font-weight:bold;font-size:15px}.save{background:#22c55e}.on{background:#22c55e}.off{background:#ef4444}.auto{background:#3b82f6}.manual{background:#f59e0b}.back{background:#334155}.status{text-align:center;margin-top:15px;font-weight:bold}.info{background:#0f172a;padding:12px;border-radius:10px;margin-top:15px;font-size:13px;color:#94a3b8}
+</style></head>
+<body><div class="container"><h1>⚙️ Automação</h1>
+<div class="card">
+<label>Nível para LIGAR a bomba (%)</label><input id="nivelLigar" type="number" min="20" max="80" step="5">
+<label>Nível para DESLIGAR a bomba (%)</label><input id="nivelDesligar" type="number" min="80" max="95" step="5">
+<label>Tempo máximo da bomba (minutos)</label><input id="timeoutBomba" type="number" min="5" max="180">
+<label>Debounce das boias (segundos)</label><input id="debounce" type="number" min="1" max="30">
+<button class="save" onclick="salvar()">💾 SALVAR CONFIGURAÇÃO</button><div id="status" class="status"></div>
+<div class="info">As configurações são gravadas no Firebase e o ESP32-C3 também as salva na memória. Assim, após reiniciar, ele mantém a última configuração válida.</div>
+</div>
+<div class="card"><h3>🎛️ Controle</h3><button class="on" onclick="bomba('ON')">🟢 LIGAR BOMBA</button><button class="off" onclick="bomba('OFF')">🔴 DESLIGAR BOMBA</button><button class="auto" onclick="modo('AUTO')">🤖 MODO AUTOMÁTICO</button><button class="manual" onclick="modo('MANUAL')">🖐️ MODO MANUAL</button></div>
+<button class="back" onclick="location.href='index.html'">← VOLTAR PARA O PAINEL</button></div>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script>
+const firebaseConfig={apiKey:'SUA_API_KEY_FIREBASE',authDomain:'monitor-caixa-agua-ff63a.firebaseapp.com',databaseURL:'https://monitor-caixa-agua-ff63a-default-rtdb.firebaseio.com',projectId:'monitor-caixa-agua-ff63a',storageBucket:'monitor-caixa-agua-ff63a.firebasestorage.app',messagingSenderId:'176234978770',appId:'1:176234978770:web:e193d8242f4f111abd3c0b'};if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);const db=firebase.database();
+db.ref('configuracao').on('value',s=>{const c=s.val()||{};document.getElementById('nivelLigar').value=c.nivel_ligar??40;document.getElementById('nivelDesligar').value=c.nivel_desligar??95;document.getElementById('timeoutBomba').value=c.timeout_bomba??90;document.getElementById('debounce').value=c.debounce??5});
+function salvar(){const a=+nivelLigar.value,b=+nivelDesligar.value,t=+timeoutBomba.value,d=+debounce.value;if(a<20||a>80||b<80||b>95||t<5||t>180||d<1||d>30||a>=b){alert('Verifique os valores. Ligar deve ser menor que desligar.');return}db.ref('configuracao').set({nivel_ligar:a,nivel_desligar:b,timeout_bomba:t,debounce:d}).then(()=>status.innerText='✅ Configuração salva.').catch(e=>status.innerText='❌ '+e.message)}
+function bomba(c){if(confirm(c==='ON'?'Ligar a bomba?':'Desligar a bomba?'))db.ref('comandos/bomba').set(c)}function modo(m){db.ref('comandos/modo').set(m)}
+</script></body></html>
