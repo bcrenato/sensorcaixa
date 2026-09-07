@@ -6,76 +6,87 @@
 <title>Monitor Caixa D’Água</title>
 <link rel="stylesheet" href="style.css">
 <link rel="manifest" href="manifest.json">
-
 <meta name="theme-color" content="#0b0f1a">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Monitoramento Água">
-
 <link rel="apple-touch-icon" href="/caixa_dagua/icone.png">
-
 <style>
-  .btn-filtro { background: #1e293b; color: #94a3b8; border: 1px solid #3b82f6; padding: 5px 10px; border-radius: 8px; font-size: 10px; cursor: pointer; transition: 0.3s; }
-  .btn-filtro.active { background: #3b82f6; color: white; }
-  
-  /* Estilo do botão de atalho restaurado */
-  .btn-navegacao { width: 100%; padding: 12px; background: #334155; color: white; border-radius: 12px; border: 1px solid #475569; font-weight: bold; margin-top: 15px; cursor: pointer; font-size: 13px; transition: 0.3s; }
-  .btn-navegacao:hover { background: #475569; }
+.btn-filtro{background:#1e293b;color:#94a3b8;border:1px solid #3b82f6;padding:5px 10px;border-radius:8px;font-size:10px;cursor:pointer;transition:.3s}
+.btn-filtro.active{background:#3b82f6;color:white}
+.btn-navegacao{width:100%;padding:12px;background:#334155;color:white;border-radius:12px;border:1px solid #475569;font-weight:bold;margin-top:15px;cursor:pointer;font-size:13px;transition:.3s}
+.btn-navegacao:hover{background:#475569}
+.automacao-card{margin-top:15px;text-align:left}
+.auto-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.auto-item{background:#0f172a;padding:10px;border-radius:10px;font-size:13px}
+.auto-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.auto-buttons button{padding:11px;border:0;border-radius:10px;color:#fff;font-weight:bold;cursor:pointer}
+.btn-on{background:#22c55e}.btn-off{background:#ef4444}.btn-auto{background:#3b82f6}.btn-manual{background:#f59e0b}
 </style>
 </head>
 <body>
-
 <div class="dashboard">
-  <div class="titulo-box" style="position: relative;">
+  <div class="titulo-box" style="position:relative;">
     <h2 class="titulo-principal">CAIXA D’ÁGUA</h2>
     <p class="subtitulo">Marechal Castelo Branco</p>
-    <div onclick="window.location.href='config.html'" style="position: absolute; right: 0; top: 0; cursor: pointer; font-size: 24px;">⚙️</div>
+    <div onclick="window.location.href='config.html'" style="position:absolute;right:0;top:0;cursor:pointer;font-size:24px">⚙️</div>
   </div>
 
   <div class="card-tank">
-      <div class="tank">
-        <div class="water" id="water">
-            <div class="wave wave1"></div>
-            <div class="wave wave2"></div>
-        </div>
-        <div id="alertaGrande" class="alerta-grande"></div>
-        <img src="caixa.png" class="tank-img">
-        <div class="glass"></div>
-      </div>
-      <h1 id="percent">0%</h1>
-      <h2 id="litrosText" style="font-size: 22px; margin: 0; font-weight: bold; opacity: 0.9;">0 L</h2>
-      <p id="status">Normal</p>
+    <div class="tank">
+      <div class="water" id="water"><div class="wave wave1"></div><div class="wave wave2"></div></div>
+      <div id="alertaGrande" class="alerta-grande"></div>
+      <img src="caixa.png" class="tank-img">
+      <div class="glass"></div>
+    </div>
+    <h1 id="percent">0%</h1>
+    <h2 id="litrosText" style="font-size:22px;margin:0;font-weight:bold;opacity:.9">0 L</h2>
+    <p id="status">Normal</p>
   </div>
 
-  <button onclick="window.location.href='consumo.html'" class="btn-navegacao">
-    📊 DETALHES E HISTÓRICO DE GASTOS
-  </button>
+  <div class="card-chart automacao-card">
+    <h3 style="text-align:center">⚙️ AUTOMAÇÃO</h3>
+    <p style="font-size:12px;color:#94a3b8;text-align:center;margin-top:-4px">Comandos enviados ao ESP32 • Sonoff controlado pelo ESP32</p>
+    <div class="auto-grid">
+      <div class="auto-item">Bomba<br><b id="statusBomba">-</b></div>
+      <div class="auto-item">Modo<br><b id="modoAutomacao">-</b></div>
+      <div class="auto-item">Sonoff<br><b id="statusSonoff">-</b></div>
+      <div class="auto-item">Wi-Fi<br><b id="wifiRssi">-</b></div>
+    </div>
+    <div class="auto-grid" style="margin-top:8px">
+      <div class="auto-item">20% <b id="boia20">⚪</b></div>
+      <div class="auto-item">40% <b id="boia40">⚪</b></div>
+      <div class="auto-item">60% <b id="boia60">⚪</b></div>
+      <div class="auto-item">80% <b id="boia80">⚪</b></div>
+      <div class="auto-item">95% <b id="boia95">⚪</b></div>
+      <div class="auto-item">Sistema<br><b id="sistemaSeguro">-</b></div>
+    </div>
+    <div class="auto-buttons">
+      <button class="btn-on" onclick="comandoBomba('ON')">🟢 LIGAR</button>
+      <button class="btn-off" onclick="comandoBomba('OFF')">🔴 DESLIGAR</button>
+      <button class="btn-auto" onclick="comandoModo('AUTO')">🤖 AUTOMÁTICO</button>
+      <button class="btn-manual" onclick="comandoModo('MANUAL')">🖐️ MANUAL</button>
+    </div>
+    <p style="font-size:12px;color:#94a3b8;margin-bottom:0">Último evento: <span id="ultimoEvento">-</span></p>
+  </div>
 
-  <!-- ===== NOVO: GASTO HOJE ===== -->
-<div class="card-chart">
-  <h3>💧 GASTO HOJE</h3>
-  <h1 id="gastoHoje">0 L</h1>
-</div>
+  <button onclick="window.location.href='consumo.html'" class="btn-navegacao">📊 DETALHES E HISTÓRICO DE GASTOS</button>
 
-  <!-- ===== NOVO: GRÁFICO ===== -->
-<div class="card-chart">
-  <h3>📊 Consumo dos últimos dias</h3>
-  <canvas id="graficoConsumo"></canvas>
-</div>
-  
+  <div class="card-chart">
+    <h3>💧 GASTO HOJE</h3>
+    <h1 id="gastoHoje">0 L</h1>
+  </div>
 
-  
+  <div class="card-chart">
+    <h3>📊 Consumo dos últimos dias</h3>
+    <canvas id="graficoConsumo"></canvas>
+  </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="script.js"></script>
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
-  }
-</script>
+<script>if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js')}</script>
 </body>
 </html>

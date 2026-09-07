@@ -6,7 +6,7 @@
 #include <WiFiClientSecure.h>
 #include <Preferences.h>
 #include <esp_task_wdt.h>
-#include <time.h>F
+#include <time.h>
 
 #define FIREBASE_DISABLE_SD_CARD
 #define FIREBASE_DISABLE_FLASH
